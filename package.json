@@ -1,0 +1,27 @@
+{
+  "name": "bosvote-snapshots",
+  "version": "1.0.0",
+  "description": "BOS Votes Snapshots",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BOS-Nation/bosvote-snapshots.git"
+  },
+  "author": "Denis Carriere <denis@eosnation.io>",
+  "license": "MIT",
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.0.0-rc.1",
+    "@eoscafe/hyperion": "^2.0.2",
+    "@types/isomorphic-fetch": "0.0.35",
+    "eosjs": "^20.0.0",
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^11.13.2",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.2"
+  }
+}
