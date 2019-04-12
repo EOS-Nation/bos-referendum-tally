@@ -2,34 +2,23 @@
 
 ## Installation
 
-Using Yarn:
-
 ```bash
-yarn add bosvote-snapshots
-```
-
-or using NPM:
-
-```bash
-npm install --save bosvote-snapshots
+git clone https://github.com/EOS-Nation/bosvote-snapshots.git
+cd bosvote-snapshots
+npm install
 ```
 
 ## Quick Start
 
-**CommonJS**
-
-```js
-const { getVoters } = require("bosvote-snapshots")
-```
-
-**TypeScript**
-
-```ts
-import { getVoters } from "bosvote-snapshots"
+```bash
+npm start
 ```
 
 ## ENV Variables
 
-```bash
-HYPERION_ENDPOINT=<Enter Hyperion Endpoint>  # "https://eos.hyperion.eosrio.io"
+```env
+BLOCK_INTERVAL=50
+CHAIN="bos"
+NODEOS_ENDPOINT="http://localhost:8888"
+ELASTICSEARCH_ENDPOINT="http://localhost:9200"
 ```
