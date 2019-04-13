@@ -3,9 +3,9 @@ import { Client } from '@elastic/elasticsearch'
 import * as fetch from "isomorphic-fetch";
 require('dotenv').config()
 
-const BLOCK_INTERVAL: number = (process.env && process.env.BLOCK_INTERVAL) ? Number(process.env.BLOCK_INTERVAL) : 50;
+const BLOCK_INTERVAL: number = (process.env && process.env.BLOCK_INTERVAL) ? Number(process.env.BLOCK_INTERVAL) : 10000;
 const CHAIN = (process.env && process.env.CHAIN) ? process.env.CHAIN : "bos";
-const NODEOS_ENDPOINT = (process.env && process.env.NODEOS_ENDPOINT) ? process.env.NODEOS_ENDPOINT : "https://localhost:8888";
+const NODEOS_ENDPOINT = (process.env && process.env.NODEOS_ENDPOINT) ? process.env.NODEOS_ENDPOINT : "http://localhost:8888";
 const ELASTICSEARCH_ENDPOINT = (process.env && process.env.ELASTICSEARCH_ENDPOINT) ? process.env.ELASTICSEARCH_ENDPOINT : "http://localhost:9200";
 
 if (!BLOCK_INTERVAL) throw new Error("[BLOCK_INTERVAL] is required as .env");

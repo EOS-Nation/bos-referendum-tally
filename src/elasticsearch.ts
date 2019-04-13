@@ -64,3 +64,34 @@ export async function eosioVoters(gte: number, lte: number, options: {
     }
     return hits;
 }
+
+export async function eosioVotersLastBlock(options: {
+    chain?: string,
+} = {}) {
+    const chain = options.chain || CHAIN;
+
+    const search = await client.search({
+        index: `${chain}-delta`,
+        size: 0,
+        body: {
+            query: {
+                bool: {
+                    must: [
+                        { match: { table: "voters" } },
+                        { multi_match: { query: "eosio", fields: ["code", "scope"] } }
+                    ]
+                }
+            },
+            aggs: {
+                block_num : { "max" : { field : "block_num" } }
+            }
+        }
+    });
+    if (search.statusCode !== 200) throw new Error("statusCode must be 200");
+
+    return search.body.aggregations.block_num.value;
+}
+
+// (async () => {
+//     console.log(await eosioVotersLatestBlock())
+// })();
