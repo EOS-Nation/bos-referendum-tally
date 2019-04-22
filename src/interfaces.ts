@@ -1,15 +1,21 @@
-export interface Search {
-    block_num: number;
-    primary_key: number;
-    payer: string;
+export interface Voters {
+    owner: string;
+    proxy: string;
+    producers: any[];
+    staked: number;
+    last_vote_weight: string;
+    proxied_vote_weight: string;
+    is_proxy: number;
+    flags1: number;
+    reserved2: number;
+    reserved3: string;
 }
 
-export interface Voters extends Search {
-    "@voters": {
-        proxy?: string;
-        last_vote_weight: number;
-        proxied_vote_weight: number;
-        staked: number;
-        is_proxy: boolean;
-    }
+export interface Vote {
+    id: number;
+    proposal_name: string;
+    voter: string;
+    vote: number;
+    vote_json: string;
+    updated_at: string;
 }

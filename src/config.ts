@@ -1,24 +1,22 @@
-import { JsonRpc } from "eosjs";
-import { Client } from '@elastic/elasticsearch'
+// import { JsonRpc } from "eosjs";
+import { DappClient as JsonRpc } from "dapp-client";
 import * as fetch from "isomorphic-fetch";
 require('dotenv').config()
 
-const BLOCK_INTERVAL: number = (process.env && process.env.BLOCK_INTERVAL) ? Number(process.env.BLOCK_INTERVAL) : 10000;
-const CHAIN = (process.env && process.env.CHAIN) ? process.env.CHAIN : "bos";
-const NODEOS_ENDPOINT = (process.env && process.env.NODEOS_ENDPOINT) ? process.env.NODEOS_ENDPOINT : "http://localhost:8888";
-const ELASTICSEARCH_ENDPOINT = (process.env && process.env.ELASTICSEARCH_ENDPOINT) ? process.env.ELASTICSEARCH_ENDPOINT : "http://localhost:9200";
+if (!process.env.NODEOS_ENDPOINT) throw new Error("[NODEOS_ENDPOINT] is required as .env");
+if (!process.env.CHAIN) throw new Error("[CHAIN] is required as .env");
 
-if (!BLOCK_INTERVAL) throw new Error("[BLOCK_INTERVAL] is required as .env");
-if (!CHAIN) throw new Error("[CHAIN] is required as .env");
-if (!NODEOS_ENDPOINT) throw new Error("[NODEOS_ENDPOINT] is required as .env");
-if (!ELASTICSEARCH_ENDPOINT) throw new Error("[ELASTICSEARCH_ENDPOINT] is required as .env");
+export const NODEOS_ENDPOINT = process.env.NODEOS_ENDPOINT;
+export const CHAIN = process.env.CHAIN;
+export const DELAY_MS = Number(process.env.DELAY_MS || 10);
+export const CONTRACT_FORUM = process.env.CONTRACT_FORUM || "eosio.forum";
 
+// eosio RPC
 export const rpc = new JsonRpc(NODEOS_ENDPOINT, {fetch})
-export const client = new Client({ node: ELASTICSEARCH_ENDPOINT })
-export {CHAIN, BLOCK_INTERVAL, NODEOS_ENDPOINT, ELASTICSEARCH_ENDPOINT}
 
-console.log(".env configs");
-console.log("BLOCK_INTERVAL:", BLOCK_INTERVAL);
-console.log("CHAIN:", CHAIN);
+console.log("Configurations");
+console.log("--------------");
 console.log("NODEOS_ENDPOINT:", NODEOS_ENDPOINT);
-console.log("ELASTICSEARCH_ENDPOINT:", ELASTICSEARCH_ENDPOINT);
+console.log("CHAIN:", CHAIN);
+console.log("DELAY_MS:", DELAY_MS);
+console.log("CONTRACT_FORUM:", CONTRACT_FORUM);

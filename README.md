@@ -17,8 +17,7 @@ npm start
 ## ENV Variables
 
 ```env
-BLOCK_INTERVAL=50
 CHAIN="bos"
 NODEOS_ENDPOINT="http://localhost:8888"
-ELASTICSEARCH_ENDPOINT="http://localhost:9200"
+ZMQ_ENDPOINT="tcp://localhost:5557"
 ```
