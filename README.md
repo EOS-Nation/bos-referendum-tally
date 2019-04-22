@@ -17,7 +17,8 @@ npm start
 ## ENV Variables
 
 ```env
-CHAIN="bos"
+CHAIN="eos"
 NODEOS_ENDPOINT="http://localhost:8888"
-ZMQ_ENDPOINT="tcp://localhost:5557"
+CONTRACT_FORUM="eosio.forum"
+DELAY_MS=10
 ```
