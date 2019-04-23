@@ -1,12 +1,29 @@
 import { delay } from "./utils";
 import { rpc, DELAY_MS, CONTRACT_FORUM } from "./config";
-import { Voters, Vote, Proposal } from "./interfaces";
+import { Voters, Vote, Proposal, Delband } from "./interfaces";
 
 /**
  * Get Table `eosio::voters`
  */
 export async function get_table_voters() {
     return get_tables<Voters>("eosio", "eosio", "voters", "owner", ["flags1", "reserved2", "reserved3"]);
+}
+
+/**
+ * Get Table `eosio::delband`
+ */
+export async function get_table_delband(scopes: Set<string>) {
+    const delband: Delband[] = [];
+    for (const scope of Array.from(scopes)) {
+        console.log(`get_table_rows [eosio::${scope}:userres]`);
+        const response = await rpc.get_table_rows<Delband>("eosio", scope, "delband", {json: true });
+
+        for (const row of response.rows) {
+            // Only include `delband` that is self delegated
+            if (row.from == row.to) delband.push(row);
+        }
+    }
+    return delband;
 }
 
 /**

@@ -52,8 +52,8 @@ export function parseTokenString(tokenString: string) {
  */
 export function disjoint(source: Set<string>, target: Set<string>) {
     const result = new Set<string>();
-    source.forEach(item => {
+    for (const item of Array.from(source)) {
         if (!target.has(item)) result.add(item);
-    })
+    }
     return result;
 }

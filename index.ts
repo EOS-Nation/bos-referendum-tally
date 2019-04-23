@@ -1,14 +1,20 @@
+import * as fs from "fs";
 import * as path from "path";
 import * as write from "write-json-file";
+import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
-import { rpc, CHAIN, CONTRACT_FORUM } from "./src/config";
+import { rpc, CHAIN, CONTRACT_FORUM, DEBUG } from "./src/config";
 import { filterVotersByVotes } from "./src/tallies";
-import { get_table_voters, get_table_vote, get_table_proposal } from "./src/get_tables";
+import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint } from "./src/utils";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data", CHAIN);
+const voters_latest = path.join(basepath, "eosio", "voters", "latest.json")
+const delband_latest = path.join(basepath, "eosio", "delband", "latest.json")
+const vote_latest = path.join(basepath, CONTRACT_FORUM, "vote", "latest.json")
+const proposal_latest = path.join(basepath, CONTRACT_FORUM, "proposal", "latest.json")
 
 // Global containers
 let votes: Vote[] = [];
@@ -26,16 +32,18 @@ async function syncEosio() {
     console.log("head_block_num:", head_block_num)
 
     // fetch `eosio` voters
-    voters = filterVotersByVotes(await get_table_voters(), votes);
+    if (DEBUG && fs.existsSync(voters_latest)) voters = load.sync(voters_latest) // Speed up process for debugging
+    else voters = filterVotersByVotes(await get_table_voters(), votes);
     voters_owner = new Set(voters.map((row) => row.owner));
 
     // Retrieve `staked` from accounts that have not yet voted for BPs
     const owners_without_stake = disjoint(votes_owner, voters_owner)
-    console.log(owners_without_stake, owners_without_stake.size);
-    // delband = await get_table_delband(votes_owner, voters_owner);
+    if (DEBUG && fs.existsSync(delband_latest)) delband = load.sync(delband_latest) // Speed up process for debugging
+    else delband = await get_table_delband(owners_without_stake);
 
     // Save JSON
     save(path.join(basepath, "eosio", "voters"), head_block_num, voters);
+    save(path.join(basepath, "eosio", "delband"), head_block_num, delband);
 }
 
 /**
@@ -46,11 +54,13 @@ async function syncForum() {
     console.log("head_block_num:", head_block_num)
 
     // fetch `eosio.forum` votes
-    votes = await get_table_vote();
+    if (DEBUG && fs.existsSync(vote_latest)) votes = load.sync(vote_latest) // Speed up process for debugging
+    else votes = await get_table_vote();
     votes_owner = new Set(votes.map((row) => row.voter));
 
     // fetch `eosio.forum` proposal
-    proposals = await get_table_proposal();
+    if (DEBUG && fs.existsSync(proposal_latest)) proposals = load.sync(proposal_latest) // Speed up process for debugging
+    else proposals = await get_table_proposal();
 
     // Save JSON
     save(path.join(basepath, CONTRACT_FORUM, "vote"), head_block_num, votes);
