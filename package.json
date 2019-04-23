@@ -13,6 +13,7 @@
   "author": "Denis Carriere <denis@eosnation.io>",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.441.0",
     "cron": "^1.7.0",
     "dapp-client": "^0.3.0",
     "dotenv": "^7.0.0",

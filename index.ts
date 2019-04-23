@@ -3,14 +3,15 @@ import * as path from "path";
 import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { CronJob } from "cron";
+import { uploadS3 } from "./src/aws";
 import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
-import { rpc, CHAIN_ID, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
+import { rpc, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint, parseTokenString } from "./src/utils";
 
 // Base filepaths
-const basepath = path.join(__dirname, "data", CHAIN_ID);
+const basepath = path.join(__dirname, "data");
 const voters_latest = path.join(basepath, "eosio", "voters", "latest.json");
 const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 
@@ -40,8 +41,8 @@ async function syncEosio(head_block_num: number) {
     else delband = await get_table_delband(owners_without_stake);
 
     // Save JSON
-    save(path.join(basepath, "eosio", "voters"), head_block_num, voters);
-    save(path.join(basepath, "eosio", "delband"), head_block_num, delband);
+    save("eosio", "voters", head_block_num, voters);
+    save("eosio", "delband", head_block_num, delband);
 }
 
 /**
@@ -58,8 +59,8 @@ async function syncForum(head_block_num: number) {
     proposals = await get_table_proposal();
 
     // Save JSON
-    save(path.join(basepath, CONTRACT_FORUM, "vote"), head_block_num, votes);
-    save(path.join(basepath, CONTRACT_FORUM, "proposal"), head_block_num, proposals);
+    save(CONTRACT_FORUM, "vote", head_block_num, votes);
+    save(CONTRACT_FORUM, "proposal", head_block_num, proposals);
 }
 
 /**
@@ -72,7 +73,7 @@ async function syncToken(head_block_num: number) {
     currency_supply = parseTokenString(currencyStats[TOKEN_SYMBOL].supply).amount;
 
     // Save JSON
-    save(path.join(basepath, CONTRACT_TOKEN, TOKEN_SYMBOL), head_block_num, currencyStats);
+    save(CONTRACT_TOKEN, "get_currency_stats", head_block_num, currencyStats);
 }
 
 /**
@@ -86,19 +87,20 @@ async function calculateTallies(head_block_num: number) {
     const tallies = generateTallies(head_block_num, proposals, accounts, proxies, currency_supply);
 
     // Save JSON
-    save(path.join(basepath, "referendum", "accounts"), head_block_num, accounts);
-    save(path.join(basepath, "referendum", "proxies"), head_block_num, proxies);
-    save(path.join(basepath, "referendum", "tallies"), head_block_num, tallies);
+    save("referendum", "accounts", head_block_num, accounts);
+    save("referendum", "proxies", head_block_num, proxies);
+    save("referendum", "tallies", head_block_num, tallies);
 }
 
 /**
  * Save JSON file
  */
-function save(basepath: string, block_num: number, json: any) {
-    const filepath = path.join(basepath, block_num + ".json");
-    console.log(`saving JSON ${filepath}`);
-    write.sync(filepath, json);
-    write.sync(path.join(basepath, "latest.json"), json);
+function save(account: string, table: string, block_num: number, json: any) {
+    console.log(`saving JSON ${account}/${table}/${block_num}.json`);
+
+    write.sync(path.join(basepath, account, table, block_num + ".json"), json);
+    write.sync(path.join(basepath, account, table, "latest.json"), json);
+    uploadS3(`${account}/${table}/${block_num}.json`, json);
 }
 
 /**
