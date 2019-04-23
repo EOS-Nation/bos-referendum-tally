@@ -1,14 +1,15 @@
 {
-  "name": "bosvote-snapshots",
-  "version": "1.0.0",
-  "description": "BOS Votes Snapshots",
+  "private": true,
+  "name": "bos-referendum-tally",
+  "version": "0.1.0",
+  "description": "BOS Referendum Tally",
   "main": "index.js",
   "scripts": {
     "start": "ts-node index.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BOS-Nation/bosvote-snapshots.git"
+    "url": "git+https://github.com/BOS-Nation/bos-referendum-tally.git"
   },
   "author": "Denis Carriere <denis@eosnation.io>",
   "license": "MIT",

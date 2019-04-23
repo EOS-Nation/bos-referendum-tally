@@ -8,7 +8,7 @@ import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
 import { rpc, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
-import { disjoint, parseTokenString } from "./src/utils";
+import { disjoint, parseTokenString, createHash } from "./src/utils";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data");
@@ -96,10 +96,24 @@ async function calculateTallies(head_block_num: number) {
  * Save JSON file
  */
 function save(account: string, table: string, block_num: number, json: any) {
-    console.log(`saving JSON ${account}/${table}/${block_num}.json`);
+    const filepath = path.join(basepath, account, table, block_num + ".json");
+    const latest = path.join(basepath, account, table, "latest.json");
 
-    write.sync(path.join(basepath, account, table, block_num + ".json"), json);
-    write.sync(path.join(basepath, account, table, "latest.json"), json);
+    // Prevent saving if `latest.json` is the same as [json]
+    if (fs.existsSync(latest)) {
+        const latestJson = load.sync(latest);
+        if (createHash(latestJson) === createHash(json)) {
+            console.log(`JSON already exists ${account}/${table}/${block_num}.json`);
+            return
+        }
+    }
+
+    // Save to JSON disk
+    console.log(`saving JSON ${account}/${table}/${block_num}.json`);
+    write.sync(filepath, json);
+    write.sync(latest, json);
+
+    // Save to AWS S3 bucket
     uploadS3(`${account}/${table}/${block_num}.json`, json);
     uploadS3(`${account}/${table}/latest.json`, json);
 }
