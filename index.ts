@@ -4,17 +4,15 @@ import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
-import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
+import { rpc, CHAIN_ID, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint, parseTokenString } from "./src/utils";
 
 // Base filepaths
-const basepath = path.join(__dirname, "data", CHAIN);
-const voters_latest = path.join(basepath, "eosio", "voters", "latest.json")
-const delband_latest = path.join(basepath, "eosio", "delband", "latest.json")
-const vote_latest = path.join(basepath, CONTRACT_FORUM, "vote", "latest.json")
-const proposal_latest = path.join(basepath, CONTRACT_FORUM, "proposal", "latest.json")
+const basepath = path.join(__dirname, "data", CHAIN_ID);
+const voters_latest = path.join(basepath, "eosio", "voters", "latest.json");
+const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 
 // Global containers
 let votes: Vote[] = [];
@@ -23,7 +21,7 @@ let proposals: Proposal[] = [];
 let votes_owner: Set<string> = new Set();
 let voters_owner: Set<string> = new Set();
 let delband: Delband[] = [];
-let currency_supply = 1000000000;
+let currency_supply = null;
 
 /**
  * Sync `eosio` tables
