@@ -33,9 +33,16 @@ console.log("DELAY_MS:", DELAY_MS);
 console.log("CONTRACT_FORUM:", CONTRACT_FORUM);
 console.log("CONTRACT_TOKEN:", CONTRACT_TOKEN);
 console.log("TOKEN_SYMBOL:", TOKEN_SYMBOL);
-console.log("DEBUG:", DEBUG);
+
+console.log("\nAWS Config");
+console.log("----------");
 console.log("AWS_BUCKET:", AWS_BUCKET);
 console.log("AWS_ACCESS_KEY_ID:", AWS_ACCESS_KEY_ID);
 console.log("AWS_SECRET_ACCESS_KEY:", AWS_SECRET_ACCESS_KEY);
 console.log("AWS_REGION:", AWS_REGION);
-console.log();
+
+console.log("\nDebug Config");
+console.log("-----------");
+console.log("DELAY_MS:", DELAY_MS);
+console.log("DEBUG:", DEBUG + '\n');
+
