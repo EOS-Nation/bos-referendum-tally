@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { rpc, CHAIN, CONTRACT_FORUM } from "./src/config";
-import { get_table_voters, get_table_vote} from "./src/get_tables";
+import { get_table_voters, get_table_vote, get_table_proposal } from "./src/get_tables";
 
 async function main() {
     // Base filepaths
@@ -14,6 +14,9 @@ async function main() {
 
     const vote = await get_table_vote();
     save(path.join(basepath, CONTRACT_FORUM, "vote"), head_block_num, vote);
+
+    const proposal = await get_table_proposal();
+    save(path.join(basepath, CONTRACT_FORUM, "proposal"), head_block_num, proposal);
 
     const voters = await get_table_voters();
     save(path.join(basepath, "eosio", "voters"), head_block_num, voters);

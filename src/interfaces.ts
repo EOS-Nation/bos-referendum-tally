@@ -19,3 +19,12 @@ export interface Vote {
     vote_json: string;
     updated_at: string;
 }
+
+export interface Proposal {
+    proposal_name: string;
+    proposer: string;
+    title: string;
+    proposal_json: string;
+    created_at: string;
+    expires_at: string;
+}

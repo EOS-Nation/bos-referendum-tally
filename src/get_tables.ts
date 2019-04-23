@@ -1,6 +1,6 @@
-import { rpc, DELAY_MS, CONTRACT_FORUM } from "./config";
 import { delay } from "./utils";
-import { Voters, Vote } from "./interfaces";
+import { rpc, DELAY_MS, CONTRACT_FORUM } from "./config";
+import { Voters, Vote, Proposal } from "./interfaces";
 
 /**
  * Get Table `eosio::voters`
@@ -14,6 +14,13 @@ export async function get_table_voters() {
  */
 export function get_table_vote() {
     return get_tables<Vote>(CONTRACT_FORUM, CONTRACT_FORUM, "vote", "id");
+}
+
+/**
+ * Get Table `eosio.forum::proposal`
+ */
+export function get_table_proposal() {
+    return get_tables<Proposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name");
 }
 
 /**
