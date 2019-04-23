@@ -5,7 +5,7 @@ import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
 import { rpc, CHAIN, CONTRACT_FORUM, DEBUG } from "./src/config";
-import { filterVotersByVotes } from "./src/tallies";
+import { filterVotersByVotes, generateAccounts, generateProxies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint } from "./src/utils";
 
@@ -27,9 +27,8 @@ let delband: Delband[] = [];
 /**
  * Sync `eosio` tables
  */
-async function syncEosio() {
-    const {head_block_num} = await rpc.get_info()
-    console.log("head_block_num:", head_block_num)
+async function syncEosio(head_block_num: number) {
+    console.log(`syncEosio [head_block_num=${head_block_num}]`)
 
     // fetch `eosio` voters
     if (DEBUG && fs.existsSync(voters_latest)) voters = load.sync(voters_latest) // Speed up process for debugging
@@ -49,9 +48,8 @@ async function syncEosio() {
 /**
  * Sync `eosio.forum` tables
  */
-async function syncForum() {
-    const {head_block_num} = await rpc.get_info()
-    console.log("head_block_num:", head_block_num)
+async function syncForum(head_block_num: number) {
+    console.log(`calculateTallies [head_block_num=${head_block_num}]`);
 
     // fetch `eosio.forum` votes
     if (DEBUG && fs.existsSync(vote_latest)) votes = load.sync(vote_latest) // Speed up process for debugging
@@ -68,26 +66,53 @@ async function syncForum() {
 }
 
 /**
+ * Calculate Tallies
+ */
+function calculateTallies(head_block_num: number) {
+    console.log(`calculateTallies [head_block_num=${head_block_num}]`);
+
+    const accounts = generateAccounts(votes, delband, voters);
+    const proxies = generateProxies(votes, delband, voters);
+
+    // Save JSON
+    save(path.join(basepath, "referendum", "accounts"), head_block_num, accounts);
+    save(path.join(basepath, "referendum", "proxies"), head_block_num, proxies);
+}
+
+
+/**
  * Save JSON file
  */
 function save(basepath: string, block_num: number, json: any) {
-    write.sync(path.join(basepath, block_num + ".json"), json);
+    const filepath = path.join(basepath, block_num + ".json");
+    console.log(`saving JSON ${filepath}`);
+    write.sync(filepath, json);
     write.sync(path.join(basepath, "latest.json"), json);
 }
 
 /**
- * Main CronJobs
+ * BOS Referendum Vote Tally
  */
 async function main() {
-    await syncForum();
-    await syncEosio();
+    // First initialize
+    const {head_block_num} = await rpc.get_info()
+    await syncForum(head_block_num);
+    await syncEosio(head_block_num);
+    await calculateTallies(head_block_num);
 
+    // Quick tasks
     new CronJob("*/5 * * * *", async () => {
-        await syncForum()
+        const {head_block_num} = await rpc.get_info()
+        await syncForum(head_block_num);
+        await calculateTallies(head_block_num);
+
     }, () => {}, true, "America/Toronto");
 
+    // Tasks that take a long time to process
     new CronJob("*/30 * * * *", async () => {
-        await syncEosio()
+        const {head_block_num} = await rpc.get_info()
+        await syncEosio(head_block_num)
+
     }, () => {}, true, "America/Toronto");
 }
 main();
