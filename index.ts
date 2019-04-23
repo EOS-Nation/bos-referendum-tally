@@ -4,10 +4,10 @@ import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
-import { rpc, CHAIN, CONTRACT_FORUM, DEBUG } from "./src/config";
+import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
-import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband, get_currency_supply } from "./src/get_tables";
-import { disjoint } from "./src/utils";
+import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
+import { disjoint, parseTokenString } from "./src/utils";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data", CHAIN);
@@ -23,6 +23,7 @@ let proposals: Proposal[] = [];
 let votes_owner: Set<string> = new Set();
 let voters_owner: Set<string> = new Set();
 let delband: Delband[] = [];
+let currency_supply = 1000000000;
 
 /**
  * Sync `eosio` tables
@@ -49,7 +50,7 @@ async function syncEosio(head_block_num: number) {
  * Sync `eosio.forum` tables
  */
 async function syncForum(head_block_num: number) {
-    console.log(`calculateTallies [head_block_num=${head_block_num}]`);
+    console.log(`syncForum [head_block_num=${head_block_num}]`);
 
     // fetch `eosio.forum` votes
     if (DEBUG && fs.existsSync(vote_latest)) votes = load.sync(vote_latest) // Speed up process for debugging
@@ -66,6 +67,19 @@ async function syncForum(head_block_num: number) {
 }
 
 /**
+ * Sync `eosio.token` tables
+ */
+async function syncToken(head_block_num: number) {
+    console.log(`syncToken [head_block_num=${head_block_num}]`);
+
+    const currencyStats = await rpc.get_currency_stats(CONTRACT_TOKEN, TOKEN_SYMBOL);
+    currency_supply = parseTokenString(currencyStats[TOKEN_SYMBOL].supply).amount;
+
+    // Save JSON
+    save(path.join(basepath, CONTRACT_TOKEN, TOKEN_SYMBOL), head_block_num, currencyStats);
+}
+
+/**
  * Calculate Tallies
  */
 async function calculateTallies(head_block_num: number) {
@@ -73,7 +87,6 @@ async function calculateTallies(head_block_num: number) {
 
     const accounts = generateAccounts(votes, delband, voters);
     const proxies = generateProxies(votes, delband, voters);
-    const currency_supply = await get_currency_supply();
     const tallies = generateTallies(head_block_num, proposals, accounts, proxies, currency_supply);
 
     // Save JSON
@@ -81,7 +94,6 @@ async function calculateTallies(head_block_num: number) {
     save(path.join(basepath, "referendum", "proxies"), head_block_num, proxies);
     save(path.join(basepath, "referendum", "tallies"), head_block_num, tallies);
 }
-
 
 /**
  * Save JSON file
@@ -101,19 +113,21 @@ async function main() {
     const {head_block_num} = await rpc.get_info()
     await syncForum(head_block_num);
     await syncEosio(head_block_num);
+    await syncToken(head_block_num);
     await calculateTallies(head_block_num);
 
-    // Quick tasks
-    new CronJob("*/5 * * * *", async () => {
+    // Quick tasks (every 3 minute)
+    new CronJob("*/3 * * * *", async () => {
         const {head_block_num} = await rpc.get_info()
         await syncForum(head_block_num);
         await calculateTallies(head_block_num);
 
     }, () => {}, true, "America/Toronto");
 
-    // Tasks that take a long time to process
+    // Long tasks (every 30 minutes)
     new CronJob("*/30 * * * *", async () => {
         const {head_block_num} = await rpc.get_info()
+        await syncToken(head_block_num);
         await syncEosio(head_block_num)
 
     }, () => {}, true, "America/Toronto");

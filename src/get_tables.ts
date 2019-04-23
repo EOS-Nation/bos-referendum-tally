@@ -40,11 +40,6 @@ export function get_table_proposal() {
     return get_tables<Proposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name");
 }
 
-export async function get_currency_supply(code = "eosio.token", symbol = "EOS") {
-    const currencyStats = await rpc.get_currency_stats(code, symbol);
-    return parseTokenString(currencyStats.EOS.supply).amount;
-}
-
 /**
  * Get Tables
  */
