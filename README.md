@@ -47,3 +47,41 @@ eosc -u https://bos.eosn.io forum vote [voter] [proposal_name] [vote_value] --ta
 ```bash
 eosc -u https://bos.eosn.io forum propose [proposer] [proposal_name] [title] [proposal_expiration_date] --target-contract bosforumdapp
 ```
+
+## S3 Bucket URL template
+
+- [https://s3.amazonaws.com/bostest.referendum/{scope}/{table}/{block_num}.json](https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json)
+
+#### `referendum` (tally)
+
+`referendum::tallies` (tallies for `bosforumapp` voters)
+
+- https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json
+
+`referendum::accounts` (account details for `bosforumapp` voters)
+
+- https://s3.amazonaws.com/bostest.referendum/referendum/accounts/latest.json
+
+`referendum::proxies` (proxies details for `bosforumapp` voters)
+
+- https://s3.amazonaws.com/bostest.referendum/referendum/proxies/latest.json
+
+#### `bosforumapp` (eosio.token)
+
+`bosforumapp::vote` (all votes)
+
+- https://s3.amazonaws.com/bostest.referendum/bosforumapp/vote/latest.json
+
+`bosforumapp::proposal` (all proposals)
+
+- https://s3.amazonaws.com/bostest.referendum/bosforumapp/proposal/latest.json
+
+#### `eosio` (voting weights)
+
+`eosio::voters` (complete voters table)
+
+- https://s3.amazonaws.com/bostest.referendum/eosio/voters/latest.json
+
+`eosio::delband` (self delegated bandwidth amount for all `eosio.forum` voters)
+
+- https://s3.amazonaws.com/bostest.referendum/eosio/delband/latest.json
