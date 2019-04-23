@@ -101,6 +101,7 @@ function save(account: string, table: string, block_num: number, json: any) {
     write.sync(path.join(basepath, account, table, block_num + ".json"), json);
     write.sync(path.join(basepath, account, table, "latest.json"), json);
     uploadS3(`${account}/${table}/${block_num}.json`, json);
+    uploadS3(`${account}/${table}/latest.json`, json);
 }
 
 /**
