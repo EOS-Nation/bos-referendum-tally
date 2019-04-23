@@ -17,11 +17,9 @@ npm start
 ## ENV Variables
 
 ```env
-CHAIN="eos"
-NODEOS_ENDPOINT="http://localhost:8888"
-CONTRACT_FORUM="eosio.forum"
+CHAIN="bos"
+NODEOS_ENDPOINT="https://bos.eosn.io"
+CONTRACT_FORUM="bosforumdapp"
 CONTRACT_TOKEN="eosio.token"
-TOKEN_SYMBOL="EOS"
-DELAY_MS=10
-DEBUG=false
+TOKEN_SYMBOL="BOS"
 ```
