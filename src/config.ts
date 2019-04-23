@@ -10,6 +10,8 @@ export const NODEOS_ENDPOINT = process.env.NODEOS_ENDPOINT;
 export const CHAIN = process.env.CHAIN;
 export const DELAY_MS = Number(process.env.DELAY_MS || 10);
 export const CONTRACT_FORUM = process.env.CONTRACT_FORUM || "eosio.forum";
+export const CONTRACT_TOKEN = process.env.CONTRACT_TOKEN || "eosio.token";
+export const TOKEN_SYMBOL = process.env.TOKEN_SYMBOL || "EOS";
 export const DEBUG: boolean = JSON.parse(process.env.DEBUG || "false");
 
 // eosio RPC

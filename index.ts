@@ -5,8 +5,8 @@ import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
 import { rpc, CHAIN, CONTRACT_FORUM, DEBUG } from "./src/config";
-import { filterVotersByVotes, generateAccounts, generateProxies } from "./src/tallies";
-import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
+import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
+import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband, get_currency_supply } from "./src/get_tables";
 import { disjoint } from "./src/utils";
 
 // Base filepaths
@@ -68,15 +68,18 @@ async function syncForum(head_block_num: number) {
 /**
  * Calculate Tallies
  */
-function calculateTallies(head_block_num: number) {
+async function calculateTallies(head_block_num: number) {
     console.log(`calculateTallies [head_block_num=${head_block_num}]`);
 
     const accounts = generateAccounts(votes, delband, voters);
     const proxies = generateProxies(votes, delband, voters);
+    const currency_supply = await get_currency_supply();
+    const tallies = generateTallies(head_block_num, proposals, accounts, proxies, currency_supply);
 
     // Save JSON
     save(path.join(basepath, "referendum", "accounts"), head_block_num, accounts);
     save(path.join(basepath, "referendum", "proxies"), head_block_num, proxies);
+    save(path.join(basepath, "referendum", "tallies"), head_block_num, tallies);
 }
 
 

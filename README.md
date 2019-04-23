@@ -1,10 +1,10 @@
-# BOS Votes Snapshots
+# BOS Referendum Tally
 
-## Installation
+## Install
 
 ```bash
-git clone https://github.com/EOS-Nation/bosvote-snapshots.git
-cd bosvote-snapshots
+git clone https://github.com/EOS-Nation/bos-referendum-tally.git
+cd bos-referendum-tally
 npm install
 ```
 
@@ -20,5 +20,8 @@ npm start
 CHAIN="eos"
 NODEOS_ENDPOINT="http://localhost:8888"
 CONTRACT_FORUM="eosio.forum"
+CONTRACT_TOKEN="eosio.token"
+TOKEN_SYMBOL="EOS"
 DELAY_MS=10
+DEBUG=false
 ```

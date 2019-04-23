@@ -139,7 +139,7 @@ export function generateAccounts(votes: Vote[], delband: Delband[], voters: Vote
     return accounts;
 }
 
-export function generateTallies(block_num: number, proposals: Proposal[], accounts: Accounts, proxies: Accounts, currency_supply = 1000000000): Tallies {
+export function generateTallies(block_num: number, proposals: Proposal[], accounts: Accounts, proxies: Accounts, currency_supply: number): Tallies {
     const tallies: Tallies = {};
 
     for (const proposal of proposals) {
@@ -148,7 +148,7 @@ export function generateTallies(block_num: number, proposals: Proposal[], accoun
     return tallies;
 }
 
-export function generateTally(block_num: number, proposal: Proposal, accounts: Accounts, proxies: Accounts, currency_supply = 1000000000): Tally {
+export function generateTally(block_num: number, proposal: Proposal, accounts: Accounts, proxies: Accounts, currency_supply: number): Tally {
     const { proposal_name } = proposal;
     const stats = defaultStats(block_num, currency_supply);
 
