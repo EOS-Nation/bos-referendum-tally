@@ -32,9 +32,6 @@ export function defaultStats(block_num: number, currency_supply: number): Stats 
             1: 0,
             total: 0,
         },
-        vote_participation: false,
-        more_yes: false,
-        sustained_days: 0,
         block_num,
         currency_supply,
     };
@@ -235,23 +232,6 @@ export function generateTally(block_num: number, proposal: Proposal, accounts: A
         stats.staked[vote] += staked;
         stats.staked.total += staked;
     }
-
-    // Vote percentages based on currenty supply
-    const no_votes = stats.staked[0] || 0;
-    const yes_votes = stats.staked[1] || 0;
-    const total_votes = stats.staked.total || 0;
-
-    const vote_percentages = {
-        no: Number((no_votes / 10000 / currency_supply).toFixed(6)),
-        yes: Number((yes_votes / 10000 / currency_supply).toFixed(6)),
-        total: Number((total_votes / 10000 / currency_supply).toFixed(6)),
-    };
-
-    // No less than 15% vote participation among tokens
-    stats.vote_participation = vote_percentages.total > 0.15;
-
-    // No fewer than 10% more Yes than No votes (true/false)
-    stats.more_yes = ((yes_votes - no_votes) / total_votes) >= 0.1;
 
     // Proposal unique ID
     // ProposalName_YYYYMMDD // awesomeprop_20181206

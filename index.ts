@@ -53,13 +53,11 @@ async function syncForum(head_block_num: number) {
     console.log(`syncForum [head_block_num=${head_block_num}]`);
 
     // fetch `eosio.forum` votes
-    if (DEBUG && fs.existsSync(vote_latest)) votes = load.sync(vote_latest) // Speed up process for debugging
-    else votes = await get_table_vote();
+    votes = await get_table_vote();
     votes_owner = new Set(votes.map((row) => row.voter));
 
     // fetch `eosio.forum` proposal
-    if (DEBUG && fs.existsSync(proposal_latest)) proposals = load.sync(proposal_latest) // Speed up process for debugging
-    else proposals = await get_table_proposal();
+    proposals = await get_table_proposal();
 
     // Save JSON
     save(path.join(basepath, CONTRACT_FORUM, "vote"), head_block_num, votes);

@@ -1,30 +1,3 @@
-export interface State {
-    /**
-     * Status of all proposals
-     */
-    proposals: Proposal[];
-    /**
-     * Status of all proposals
-     */
-    tallies: Tallies;
-    /**
-     * Account Information
-     */
-    accounts: Accounts;
-    /**
-     * Proxies Information
-     */
-    proxies: Accounts;
-    /**
-     * Status of Votes
-     */
-    votes: Vote[];
-    /**
-     * Global Statistics
-     */
-    global: Global;
-}
-
 export interface Voters {
     owner: string;
     proxy: string;
@@ -93,18 +66,6 @@ export interface Stats {
      */
     currency_supply: number;
     /**
-     * No less than 15% vote participation among tokens
-     */
-    vote_participation: boolean;
-    /**
-     * No fewer than 10% more Yes than No votes (true/false)
-     */
-    more_yes: boolean;
-    /**
-     * Sustained for 30 continuous days within a 120 day period. (true/false)
-     */
-    sustained_days: number;
-    /**
      * Total number of votes per account & proxies
      */
     votes: {
@@ -170,25 +131,6 @@ export interface Accounts {
         is_proxy: boolean;
         proxy: string;
     }
-}
-
-export interface Global {
-    /**
-     * Current EOS supply from `eosio.token`
-     *
-     * @default "1000000000.0000 EOS"
-     */
-    supply: string;
-    /**
-     * Total Activated Staked
-     *
-     * @default 3774551190700
-     */
-    total_activated_stake: string;
-    /**
-     * Current Block Number
-     */
-    block_num: number;
 }
 
 export interface CurrencyStats {
