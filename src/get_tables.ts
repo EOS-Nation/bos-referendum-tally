@@ -59,5 +59,3 @@ export async function get_tables<T>(code: string, scope: string, table: string, 
     }
     return Array.from(rows.values());
 }
-
-get_table_vote()
