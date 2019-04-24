@@ -66,15 +66,15 @@ eosc -u https://bos.eosn.io forum propose [proposer] [proposal_name] [title] [pr
 
 - https://s3.amazonaws.com/bostest.referendum/referendum/proxies/latest.json
 
-#### `bosforumapp` (eosio.token)
+#### `bosforumdapp` (eosio.forum)
 
-`bosforumapp::vote` (all votes)
+`bosforumdapp::vote` (all votes)
 
-- https://s3.amazonaws.com/bostest.referendum/bosforumapp/vote/latest.json
+- https://s3.amazonaws.com/bostest.referendum/bosforumdapp/vote/latest.json
 
-`bosforumapp::proposal` (all proposals)
+`bosforumdapp::proposal` (all proposals)
 
-- https://s3.amazonaws.com/bostest.referendum/bosforumapp/proposal/latest.json
+- https://s3.amazonaws.com/bostest.referendum/bosforumdapp/proposal/latest.json
 
 #### `eosio` (voting weights)
 
