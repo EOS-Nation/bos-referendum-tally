@@ -5,13 +5,13 @@ import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { uploadS3 } from "./src/aws";
 import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
-import { rpc, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
+import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint, parseTokenString, createHash } from "./src/utils";
 
 // Base filepaths
-const basepath = path.join(__dirname, "data");
+const basepath = path.join(__dirname, "data", CHAIN);
 const voters_latest = path.join(basepath, "eosio", "voters", "latest.json");
 const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 

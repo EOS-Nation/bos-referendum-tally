@@ -4,9 +4,11 @@ import * as fetch from "isomorphic-fetch";
 require('dotenv').config()
 
 if (!process.env.NODEOS_ENDPOINT) throw new Error("[NODEOS_ENDPOINT] is required as .env");
+if (!process.env.CHAIN) throw new Error("[CHAIN] is required as .env");
 
 // Required
 export const NODEOS_ENDPOINT = process.env.NODEOS_ENDPOINT;
+export const CHAIN = process.env.CHAIN;
 
 // Optional
 export const CONTRACT_FORUM = process.env.CONTRACT_FORUM || "bosforumdapp";

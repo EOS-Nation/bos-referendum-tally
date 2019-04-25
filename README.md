@@ -18,6 +18,7 @@ npm start
 
 ```env
 # Configuration
+CHAIN="bostest"
 NODEOS_ENDPOINT="https://bostest.eosn.io"
 CONTRACT_FORUM="bosforumdapp"
 CONTRACT_TOKEN="eosio.token"
