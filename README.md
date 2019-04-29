@@ -1,5 +1,7 @@
 # BOS Referendum Tally
 
+> Aggregates proposals/votes/voter staked weights from `eosio.forum`.
+
 ## Install
 
 ```bash
