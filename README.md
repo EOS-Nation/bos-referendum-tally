@@ -20,7 +20,7 @@ npm start
 # Configuration
 CHAIN="bostest"
 NODEOS_ENDPOINT="https://bostest.eosn.io"
-CONTRACT_FORUM="bosforumdapp"
+CONTRACT_FORUM="eosio.forum"
 CONTRACT_TOKEN="eosio.token"
 TOKEN_SYMBOL="BOS"
 
@@ -40,13 +40,13 @@ DEBUG=false
 **vote**
 
 ```bash
-eosc -u https://bos.eosn.io forum vote [voter] [proposal_name] [vote_value] --target-contract bosforumdapp
+eosc -u https://bostest.eosn.io forum vote [voter] [proposal_name] [vote_value]
 ```
 
 **proposal**
 
 ```bash
-eosc -u https://bos.eosn.io forum propose [proposer] [proposal_name] [title] [proposal_expiration_date] --target-contract bosforumdapp
+eosc -u https://bostest.eosn.io forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 ```
 
 ## S3 Bucket URL template

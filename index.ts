@@ -31,13 +31,13 @@ async function syncEosio(head_block_num: number) {
     console.log(`syncEosio [head_block_num=${head_block_num}]`)
 
     // fetch `eosio` voters
-    if (DEBUG && fs.existsSync(voters_latest)) voters = load.sync(voters_latest) // Speed up process for debugging
+    if (DEBUG && fs.existsSync(voters_latest)) voters = load.sync(voters_latest) // Speed up download process for debugging
     else voters = filterVotersByVotes(await get_table_voters(), votes);
     voters_owner = new Set(voters.map((row) => row.owner));
 
     // Retrieve `staked` from accounts that have not yet voted for BPs
     const owners_without_stake = disjoint(votes_owner, voters_owner)
-    if (DEBUG && fs.existsSync(delband_latest)) delband = load.sync(delband_latest) // Speed up process for debugging
+    if (DEBUG && fs.existsSync(delband_latest)) delband = load.sync(delband_latest) // Speed up download process for debugging
     else delband = await get_table_delband(owners_without_stake);
 
     // Save JSON
