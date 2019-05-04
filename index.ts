@@ -118,30 +118,36 @@ function save(account: string, table: string, block_num: number, json: any) {
     uploadS3(`${account}/${table}/latest.json`, json);
 }
 
+async function quickTasks() {
+    const {head_block_num} = await rpc.get_info()
+    await syncForum(head_block_num);
+    await calculateTallies(head_block_num);
+}
+
+async function allTasks() {
+    const {head_block_num} = await rpc.get_info()
+    await syncToken(head_block_num);
+    await syncEosio(head_block_num);
+    await syncForum(head_block_num);
+    await calculateTallies(head_block_num);
+}
+
 /**
  * BOS Referendum Vote Tally
  */
 async function main() {
     // First initialize
-    const {head_block_num} = await rpc.get_info()
-    await syncForum(head_block_num);
-    await syncEosio(head_block_num);
-    await syncToken(head_block_num);
-    await calculateTallies(head_block_num);
+    await allTasks();
 
-    // Quick tasks (every 3 minute)
-    new CronJob("*/3 * * * *", async () => {
-        const {head_block_num} = await rpc.get_info()
-        await syncForum(head_block_num);
-        await calculateTallies(head_block_num);
+    // Quick tasks (every 1 minute)
+    new CronJob("* * * * *", async () => {
+        await quickTasks();
 
     }, () => {}, true, "America/Toronto");
 
     // Long tasks (every 30 minutes)
     new CronJob("*/30 * * * *", async () => {
-        const {head_block_num} = await rpc.get_info()
-        await syncToken(head_block_num);
-        await syncEosio(head_block_num)
+        await allTasks();
 
     }, () => {}, true, "America/Toronto");
 }
