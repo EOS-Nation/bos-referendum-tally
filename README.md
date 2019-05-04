@@ -57,27 +57,27 @@ eosc -u https://bostest.eosn.io forum propose [proposer] [proposal_name] [title]
 
 #### `referendum` (tally)
 
-`referendum::tallies` (tallies for `bosforumapp` voters)
+`referendum::tallies` (tallies for `eosio.forum` voters)
 
 - https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json
 
-`referendum::accounts` (account details for `bosforumapp` voters)
+`referendum::accounts` (account details for `eosio.forum` voters)
 
 - https://s3.amazonaws.com/bostest.referendum/referendum/accounts/latest.json
 
-`referendum::proxies` (proxies details for `bosforumapp` voters)
+`referendum::proxies` (proxies details for `eosio.forum` voters)
 
 - https://s3.amazonaws.com/bostest.referendum/referendum/proxies/latest.json
 
-#### `bosforumdapp` (eosio.forum)
+#### `eosio.forum` (eosio.forum)
 
-`bosforumdapp::vote` (all votes)
+`eosio.forum::vote` (all votes)
 
-- https://s3.amazonaws.com/bostest.referendum/bosforumdapp/vote/latest.json
+- https://s3.amazonaws.com/bostest.referendum/eosio.forum/vote/latest.json
 
-`bosforumdapp::proposal` (all proposals)
+`eosio.forum::proposal` (all proposals)
 
-- https://s3.amazonaws.com/bostest.referendum/bosforumdapp/proposal/latest.json
+- https://s3.amazonaws.com/bostest.referendum/eosio.forum/proposal/latest.json
 
 #### `eosio` (voting weights)
 
