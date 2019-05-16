@@ -42,13 +42,13 @@ DEBUG=false
 **vote**
 
 ```bash
-eosc -u https://bostest.eosn.io forum vote [voter] [proposal_name] [vote_value]
+bosc forum vote [voter] [proposal_name] [vote_value]
 ```
 
 **proposal**
 
 ```bash
-eosc -u https://bostest.eosn.io forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
+bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 ```
 
 ## S3 Bucket URL template
